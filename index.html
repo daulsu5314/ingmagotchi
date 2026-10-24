@@ -2661,22 +2661,27 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
 </script>
 
 
-<div id="ibar" hidden style="position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:9999;background:#3a2c40;color:#fff;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px;font:600 14px system-ui,-apple-system,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.25)"><img src="icons/icon-192.png" alt="" style="width:34px;height:34px;border-radius:9px"><span id="itext" style="flex:1;line-height:1.35">홈 화면에 잉마고치를 설치해요</span><button id="ido" style="border:0;border-radius:10px;padding:8px 12px;background:#4fa463;color:#fff;font:inherit">설치</button><button id="ix" aria-label="닫기" style="border:0;background:none;color:#fff;font:inherit;font-size:18px;padding:4px 6px">✕</button></div>
+<div id="ibar" hidden style="position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:9999;background:#1f2a1a;color:#fff;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px;font:600 14px system-ui,-apple-system,sans-serif;box-shadow:0 6px 20px rgba(0,0,0,.25)"><img src="icons/icon-192.png" alt="" style="width:34px;height:34px;border-radius:9px"><span id="itext" style="flex:1;line-height:1.35">홈 화면에 잉마고치를 설치해요</span><button id="ido" style="border:0;border-radius:10px;padding:8px 12px;background:#4fa463;color:#fff;font:inherit">설치</button><button id="ix" aria-label="닫기" style="border:0;background:none;color:#fff;font:inherit;font-size:18px;padding:4px 6px">✕</button></div>
 <script>
 (function(){
 const bar=document.getElementById('ibar'),txt=document.getElementById('itext'),btn=document.getElementById('ido');
 const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone;
-let off=false;try{off=localStorage.getItem('ing_ibar_off')==='1'}catch(e){}
+let off=false;try{off=sessionStorage.getItem('ing_ibar_off')==='1'}catch(e){}
 if(standalone||off)return;
 const show=()=>{bar.hidden=false;bar.style.display='flex'};
-document.getElementById('ix').onclick=()=>{bar.hidden=true;bar.style.display='none';try{localStorage.setItem('ing_ibar_off','1')}catch(e){}};
-let dp;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;show()});
+document.getElementById('ix').onclick=()=>{bar.hidden=true;bar.style.display='none';try{sessionStorage.setItem('ing_ibar_off','1')}catch(e){}};
+const ua=navigator.userAgent,ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),android=/android/i.test(ua);
+const inapp=/kakaotalk|naver|instagram|fban|fbav|line\/|daum|everytimeapp|band/i.test(ua);
+let dp=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;btn.style.display='';txt.textContent='홈 화면에 잉마고치를 설치해요';show()});
 btn.onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;bar.hidden=true;bar.style.display='none'};
-const ua=navigator.userAgent,ios=/iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-if(ios){btn.style.display='none';
- const safari=/safari/i.test(ua)&&!/crios|fxios|edgios|kakaotalk|naver|instagram|fban|line/i.test(ua);
- txt.innerHTML=safari?'아래 <b>공유 버튼</b> → <b>홈 화면에 추가</b>로 설치해요':'<b>사파리</b>로 열면 홈 화면에 설치할 수 있어요';
- setTimeout(show,1500);}
+addEventListener('appinstalled',()=>{bar.hidden=true;bar.style.display='none'});
+setTimeout(()=>{if(dp)return;btn.style.display='none';
+  if(inapp)txt.innerHTML=ios?'오른쪽 아래 <b>⋯</b> → <b>Safari로 열기</b> 하면 설치할 수 있어요':'오른쪽 위 <b>⋮</b> → <b>다른 브라우저로 열기</b>(크롬) 하면 설치할 수 있어요';
+  else if(ios)txt.innerHTML='<b>공유 버튼</b> → <b>홈 화면에 추가</b>로 설치해요';
+  else if(android)txt.innerHTML='브라우저 메뉴 <b>⋮</b> → <b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 눌러요';
+  else txt.innerHTML='주소창 오른쪽 <b>설치</b> 아이콘이나 메뉴에서 <b>앱 설치</b>를 눌러요';
+  show()},1800);
 })();
 </script>
 <script>
