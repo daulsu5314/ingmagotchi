@@ -1,0 +1,32 @@
+{
+  "name": "잉마고치",
+  "short_name": "잉마고치",
+  "description": "아기 땅콩 정땅콩을 구독자 1000만 먹방 유튜버로 키우는 픽셀 다마고치",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f1f7ec",
+  "theme_color": "#4fa463",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
